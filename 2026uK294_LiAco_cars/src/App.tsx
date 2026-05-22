@@ -14,6 +14,7 @@ export default function App() {
         <Route path="/objects" element={<ObjectListPage />} />
         <Route path="/objects/:id" element={<ObjectDetailPage />} />
         <Route path="/objects/:id/edit" element={<ObjectEditPage />} />
+        <Route path="/objects/create" element={<ObjectEditPage />} />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </BrowserRouter>

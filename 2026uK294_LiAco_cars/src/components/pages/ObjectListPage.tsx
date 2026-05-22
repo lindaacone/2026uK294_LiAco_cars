@@ -1,3 +1,47 @@
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { deleteCar, getCars, type Car } from "../../service/api";
+
 export default function ObjectListPage() {
-  return <h1>Login</h1>;
+  const [cars, setCars] = useState<Car[]>([]);
+
+  async function loadCars() {
+    const data = await getCars();
+    setCars(data);
+  }
+
+  async function handleDelete(id?: number) {
+    if (!id) return;
+
+    await deleteCar(id);
+    await loadCars();
+  }
+
+    useEffect(() => {
+     async function fetchCars() {
+     const data = await getCars();
+     setCars(data);
+  }
+
+  void fetchCars();
+}, []);
+
+  return (
+    <div>
+      <h1>Cars</h1>
+
+      <Link to="/objects/create">Neues Auto erstellen</Link>
+
+      <ul>
+        {cars.map((car) => (
+          <li key={car.id}>
+            {car.name} ({car.year}){" "}
+            <Link to={`/objects/${car.id}`}>Details</Link>{" "}
+            <Link to={`/objects/${car.id}/edit`}>Bearbeiten</Link>{" "}
+            <button onClick={() => handleDelete(car.id)}>Löschen</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
