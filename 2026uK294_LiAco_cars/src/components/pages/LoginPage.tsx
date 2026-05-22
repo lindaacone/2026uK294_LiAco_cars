@@ -1,18 +1,21 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
+import { login } from "../../service/api";
 
 export default function LoginPage() {
   const navigate = useNavigate();
 
-  async function handleLogin(values: {
-    email: string;
-    password: string;
-  }) {
-    console.log(values);
+async function handleLogin(values: {
+  email: string;
+  password: string;
+}) {
+  const data = await login(values.email, values.password);
 
-    // später API-Aufruf
-    navigate("/objects");
-  }
+  localStorage.setItem("accessToken", data.accessToken);
+
+  navigate("/objects");
+}
+
 
   return (
     <div>

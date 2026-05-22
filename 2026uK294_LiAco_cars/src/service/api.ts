@@ -52,3 +52,12 @@ export async function updateCar(id: string, car: Car) {
 export async function deleteCar(id: number) {
   await api.delete(`/cars/${id}`);
 }
+
+export async function login(email: string, password: string) {
+  const response = await api.post<{ accessToken: string }>("/login", {
+    email,
+    password,
+  });
+
+  return response.data;
+}
