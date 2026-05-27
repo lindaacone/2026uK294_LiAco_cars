@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import Heading from "../../components/atoms/Heading";
+import Spinner from "../../components/atoms/Spinner";
+import CarDetail from "../../components/organisms/CarDetail";
+import PageLayout from "../../components/templates/PageLayout";
 import { getCar, type Car } from "../../service/api";
 
 export default function ObjectDetailPage() {
@@ -24,22 +28,13 @@ export default function ObjectDetailPage() {
   }, [id, navigate]);
 
   if (!car) {
-    return <p>Lädt...</p>;
+    return <Spinner />;
   }
 
   return (
-    <div className="page">
-      <h1>Details</h1>
-
-      <p>ID: {car.id}</p>
-      <p>Name: {car.name}</p>
-      <p>Jahr: {car.year}</p>
-      <p>Origin: {car.origin}</p>
-
-      <div className="actions">
-        <Link to="/objects">Zurück</Link>
-        <Link to={`/objects/${car.id}/edit`}>Bearbeiten</Link>
-      </div>
-    </div>
+    <PageLayout>
+      <Heading>Details</Heading>
+      <CarDetail car={car} />
+    </PageLayout>
   );
 }

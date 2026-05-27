@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Button from "../../components/atoms/Button";
+import Heading from "../../components/atoms/Heading";
+import CarList from "../../components/organisms/CarList";
+import PageLayout from "../../components/templates/PageLayout";
 import { deleteCar, getCars, type Car } from "../../service/api";
 
 export default function ObjectListPage() {
@@ -16,17 +20,18 @@ export default function ObjectListPage() {
   }
 
   useEffect(() => {
-  async function fetchCars() {
-    try {
-      const data = await getCars();
-      setCars(data);
-    } catch {
-      alert("Autos konnten nicht geladen werden");
+    async function fetchCars() {
+      try {
+        const data = await getCars();
+        setCars(data);
+      } catch {
+        alert("Autos konnten nicht geladen werden");
+      }
     }
-  }
 
   void fetchCars();
 }, []);
+
   function handleLogout() {
     localStorage.removeItem("accessToken");
     navigate("/login");
@@ -44,24 +49,15 @@ export default function ObjectListPage() {
   }
 
   return (
-    <div className="page">
-      <h1>Cars</h1>
+    <PageLayout>
+      <Heading>Cars</Heading>
 
       <div className="actions">
-        <button onClick={handleLogout}>Logout</button>
+        <Button onClick={handleLogout}>Logout</Button>
         <Link to="/objects/create">Neues Auto erstellen</Link>
       </div>
 
-      <ul className="list">
-        {cars.map((car) => (
-          <li className="list-item" key={car.id}>
-            {car.name} ({car.year}){" "}
-            <Link to={`/objects/${car.id}`}>Details</Link>{" "}
-            <Link to={`/objects/${car.id}/edit`}>Bearbeiten</Link>{" "}
-            <button onClick={() => handleDelete(car.id)}>Löschen</button>
-          </li>
-        ))}
-      </ul>
-    </div>
+      <CarList cars={cars} onDelete={handleDelete} />
+    </PageLayout>
   );
 }
