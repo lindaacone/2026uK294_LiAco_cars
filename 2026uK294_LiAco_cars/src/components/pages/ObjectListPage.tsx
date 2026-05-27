@@ -5,11 +5,15 @@ import { deleteCar, getCars, type Car } from "../../service/api";
 export default function ObjectListPage() {
   const [cars, setCars] = useState<Car[]>([]);
   const navigate = useNavigate();
-
-  async function loadCars() {
+  
+async function loadCars() {
+  try {
     const data = await getCars();
     setCars(data);
+  } catch {
+    alert("Autos konnten nicht geladen werden");
   }
+}
 
   function handleLogout() {
     localStorage.removeItem("accessToken");

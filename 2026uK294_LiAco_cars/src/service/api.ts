@@ -3,7 +3,7 @@ import axios from "axios";
 export interface Car {
   id?: number;
   name: string;
-  year: string;
+  year: number;
   milesPerGallon?: number;
   cylinders?: number;
   displacement?: number;

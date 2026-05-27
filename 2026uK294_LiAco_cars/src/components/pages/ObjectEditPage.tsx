@@ -9,7 +9,7 @@ export default function ObjectEditPage() {
 
   const [initialValues, setInitialValues] = useState<Car>({
     name: "",
-    year: "",
+    year: 0,
     origin: "",
   });
 
@@ -17,25 +17,35 @@ export default function ObjectEditPage() {
     async function loadCar() {
       if (!id) return;
 
-      const data = await getCar(id);
-      setInitialValues({
-        name: data.name,
-        year: data.year,
-        origin: data.origin ?? "",
-      });
+      try {
+        const data = await getCar(id);
+
+        setInitialValues({
+          name: data.name,
+          year: data.year,
+          origin: data.origin ?? "",
+        });
+      } catch {
+        alert("Auto konnte nicht geladen werden");
+        navigate("/objects");
+      }
     }
 
     void loadCar();
-  }, [id]);
+  }, [id, navigate]);
 
   async function handleSubmit(values: Car) {
-    if (id) {
-      await updateCar(id, values);
-    } else {
-      await createCar(values);
-    }
+    try {
+      if (id) {
+        await updateCar(id, values);
+      } else {
+        await createCar(values);
+      }
 
-    navigate("/objects");
+      navigate("/objects");
+    } catch {
+      alert("Auto konnte nicht gespeichert werden");
+    }
   }
 
   return (
@@ -46,7 +56,10 @@ export default function ObjectEditPage() {
         initialValues={initialValues}
         enableReinitialize
         validate={(values) => {
-          const errors: Partial<Car> = {};
+          const errors: {
+            name?: string;
+            year?: string;
+          } = {};
 
           if (!values.name) {
             errors.name = "Name ist erforderlich";

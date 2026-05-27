@@ -9,11 +9,21 @@ async function handleLogin(values: {
   email: string;
   password: string;
 }) {
-  const data = await login(values.email, values.password);
+  try {
+    const data = await login(
+      values.email,
+      values.password
+    );
 
-  localStorage.setItem("accessToken", data.accessToken);
+    localStorage.setItem(
+      "accessToken",
+      data.accessToken
+    );
 
-  navigate("/objects");
+    navigate("/objects");
+  } catch {
+    alert("Login fehlgeschlagen");
+  }
 }
 
 
