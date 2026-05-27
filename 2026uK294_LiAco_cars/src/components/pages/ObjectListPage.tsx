@@ -1,13 +1,19 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { deleteCar, getCars, type Car } from "../../service/api";
 
 export default function ObjectListPage() {
   const [cars, setCars] = useState<Car[]>([]);
+  const navigate = useNavigate();
 
   async function loadCars() {
     const data = await getCars();
     setCars(data);
+  }
+
+  function handleLogout() {
+    localStorage.removeItem("accessToken");
+    navigate("/login");
   }
 
   async function handleDelete(id?: number) {
@@ -17,11 +23,11 @@ export default function ObjectListPage() {
     await loadCars();
   }
 
-    useEffect(() => {
-     async function fetchCars() {
-     const data = await getCars();
-     setCars(data);
-  }
+  useEffect(() => {
+    async function fetchCars() {
+      const data = await getCars();
+      setCars(data);
+    }
 
   void fetchCars();
 }, []);
@@ -29,6 +35,10 @@ export default function ObjectListPage() {
   return (
     <div>
       <h1>Cars</h1>
+
+      <button onClick={handleLogout}>Logout</button>
+
+      <br />
 
       <Link to="/objects/create">Neues Auto erstellen</Link>
 
