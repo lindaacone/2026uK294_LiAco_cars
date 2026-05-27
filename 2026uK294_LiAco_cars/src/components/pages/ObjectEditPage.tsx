@@ -9,7 +9,7 @@ export default function ObjectEditPage() {
 
   const [initialValues, setInitialValues] = useState<Car>({
     name: "",
-    year: 0,
+    year: new Date().getFullYear(),
     origin: "",
   });
 
@@ -35,11 +35,16 @@ export default function ObjectEditPage() {
   }, [id, navigate]);
 
   async function handleSubmit(values: Car) {
+    const car: Car = {
+      ...values,
+      year: Number(values.year),
+    };
+
     try {
       if (id) {
-        await updateCar(id, values);
+        await updateCar(id, car);
       } else {
-        await createCar(values);
+        await createCar(car);
       }
 
       navigate("/objects");
@@ -49,7 +54,7 @@ export default function ObjectEditPage() {
   }
 
   return (
-    <div>
+    <div className="page">
       <h1>{id ? "Auto bearbeiten" : "Auto erstellen"}</h1>
 
       <Formik
@@ -67,26 +72,28 @@ export default function ObjectEditPage() {
 
           if (!values.year) {
             errors.year = "Jahr ist erforderlich";
+          } else if (Number(values.year) < 1800) {
+            errors.year = "Jahr muss grösser als 1800 sein";
           }
 
           return errors;
         }}
         onSubmit={handleSubmit}
       >
-        <Form>
-          <div>
+        <Form className="form">
+          <div className="form-group">
             <label>Name</label>
             <Field name="name" />
-            <ErrorMessage name="name" component="div" />
+            <ErrorMessage name="name" component="div" className="error" />
           </div>
 
-          <div>
+          <div className="form-group">
             <label>Jahr</label>
-            <Field name="year" />
-            <ErrorMessage name="year" component="div" />
+            <Field name="year" type="number" />
+            <ErrorMessage name="year" component="div" className="error" />
           </div>
 
-          <div>
+          <div className="form-group">
             <label>Origin</label>
             <Field name="origin" />
           </div>

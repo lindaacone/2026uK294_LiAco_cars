@@ -24,11 +24,12 @@ async function handleLogin(values: {
   } catch {
     alert("Login fehlgeschlagen");
   }
+
 }
 
 
   return (
-    <div>
+    <div className="page">
       <h1>Login</h1>
 
       <Formik
@@ -54,23 +55,28 @@ async function handleLogin(values: {
         }}
         onSubmit={handleLogin}
       >
-        <Form>
-          <div>
-            <label>E-Mail</label>
-            <Field
-              type="email"
-              name="email"
+        <Form className="form">
+          <div className="form-group">
+          <label>E-Mail</label>
+          <Field type="email" name="email" />
+          <ErrorMessage
+            name="email"
+            component="div"
+            className="error"
             />
-            <ErrorMessage name="email" component="div" />
           </div>
 
-          <div>
-            <label>Passwort</label>
-            <Field
-              type="password"
-              name="password"
+          <div className="form-group">
+          <label>Passwort</label>
+          <Field
+            type="password"
+            name="password"
+          />
+          <ErrorMessage
+            name="password"
+            component="div"
+            className="error"
             />
-            <ErrorMessage name="password" component="div" />
           </div>
 
           <button type="submit">

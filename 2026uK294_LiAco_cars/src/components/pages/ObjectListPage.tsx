@@ -5,16 +5,28 @@ import { deleteCar, getCars, type Car } from "../../service/api";
 export default function ObjectListPage() {
   const [cars, setCars] = useState<Car[]>([]);
   const navigate = useNavigate();
-  
-async function loadCars() {
-  try {
-    const data = await getCars();
-    setCars(data);
-  } catch {
-    alert("Autos konnten nicht geladen werden");
-  }
-}
 
+  async function loadCars() {
+    try {
+      const data = await getCars();
+      setCars(data);
+    } catch {
+      alert("Autos konnten nicht geladen werden");
+    }
+  }
+
+  useEffect(() => {
+  async function fetchCars() {
+    try {
+      const data = await getCars();
+      setCars(data);
+    } catch {
+      alert("Autos konnten nicht geladen werden");
+    }
+  }
+
+  void fetchCars();
+}, []);
   function handleLogout() {
     localStorage.removeItem("accessToken");
     navigate("/login");
@@ -23,32 +35,26 @@ async function loadCars() {
   async function handleDelete(id?: number) {
     if (!id) return;
 
-    await deleteCar(id);
-    await loadCars();
+    try {
+      await deleteCar(id);
+      await loadCars();
+    } catch {
+      alert("Auto konnte nicht gelöscht werden");
+    }
   }
 
-  useEffect(() => {
-    async function fetchCars() {
-      const data = await getCars();
-      setCars(data);
-    }
-
-  void fetchCars();
-}, []);
-
   return (
-    <div>
+    <div className="page">
       <h1>Cars</h1>
 
-      <button onClick={handleLogout}>Logout</button>
+      <div className="actions">
+        <button onClick={handleLogout}>Logout</button>
+        <Link to="/objects/create">Neues Auto erstellen</Link>
+      </div>
 
-      <br />
-
-      <Link to="/objects/create">Neues Auto erstellen</Link>
-
-      <ul>
+      <ul className="list">
         {cars.map((car) => (
-          <li key={car.id}>
+          <li className="list-item" key={car.id}>
             {car.name} ({car.year}){" "}
             <Link to={`/objects/${car.id}`}>Details</Link>{" "}
             <Link to={`/objects/${car.id}/edit`}>Bearbeiten</Link>{" "}
